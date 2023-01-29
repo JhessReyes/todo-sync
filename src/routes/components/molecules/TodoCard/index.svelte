@@ -1,4 +1,6 @@
 <script lang="ts">
+	import InputTask from '../../atoms/InputTask/index.svelte';
+
 	interface Todo {
 		task: string;
 		isComplete: boolean;
@@ -33,7 +35,7 @@
 </script>
 
 <div class="rounded-xl shadow-xl md:w-50 h-full">
-	<input type="text" aria-placeholder="Agrega un plan" bind:value={todo.task} />
+	<InputTask bind:task={todo.task} />
 	<input type="date" aria-placeholder="Agrega un plan" bind:value={todo.completeAt} />
 	{#if todo.task != ''}
 		<button on:click={addTodo}>Add</button>
