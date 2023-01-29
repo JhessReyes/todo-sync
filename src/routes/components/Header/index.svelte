@@ -15,21 +15,27 @@
 						class="text-[16px] cursor-pointer"
 						aria-current={$page.url.pathname === '/' ? 'page' : undefined}
 					>
-						<a href="/">INICIO</a>
+						<a href="/">PLANEADO</a>
+					</li>
+					<li
+						class="ml-20 text-[16px] cursor-pointer"
+						aria-current={$page.url.pathname === '/' ? 'page' : undefined}
+					>
+						<a href="/">TERMINADO</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="ml-20">
+				<ul class="list-none sm:flex hidden justify-end items-center flex-1">
+					<li
+						class="text-[16px] cursor-pointer"
+						aria-current={$page.url.pathname === '/' ? 'page' : undefined}
+					>
+						<a href="/">user</a>
 					</li>
 				</ul>
 			</div>
 		</nav>
-
-		<div class="ml-20">
-			<ul class="list-none sm:flex hidden justify-end items-center flex-1">
-				<li
-					class="text-[16px] cursor-pointer"
-					aria-current={$page.url.pathname === '/' ? 'page' : undefined}
-				>
-					<a href="/">user</a>
-				</li>
-			</ul>
-		</div>
 	</div>
 </header>
