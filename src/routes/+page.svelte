@@ -1,3 +1,16 @@
-<h1>Welcome to SvelteKit</h1>
-<button class="btn bg-primary text-white">hoadsdf</button>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import HomeLayout from './components/templates/HomeLayout/index.svelte';
+</script>
+
+<section id="home">
+	<div class="flex">
+		<div class="overflow-auto">
+			<h1>PLANEADO</h1>
+			<HomeLayout />
+		</div>
+		<div class="overflow-auto">
+			<h1>TERMINADO</h1>
+			<HomeLayout />
+		</div>
+	</div>
+</section>
