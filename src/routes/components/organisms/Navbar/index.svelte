@@ -4,8 +4,8 @@
 
 <header>
 	<div class="mx-auto h-24 navbar">
-		<div class="flex-1 h-24">
-			<a href="https://kit.svelte.dev"> logo </a>
+		<div class="flex-1 h-24" aria-current={$page.url.pathname === '/planned' ? 'page' : undefined}>
+			<a href="/"> LOGO </a>
 		</div>
 
 		<nav>

@@ -1,10 +1,15 @@
 <script>
 	import '../app.css';
-	import Header from '../routes/components/Header/index.svelte';
+	import Navbar from './components/organisms/Navbar/index.svelte';
 </script>
 
+<svelte:head>
+	<title>Home</title>
+	<meta name="description" content="To Do Synchronized" />
+</svelte:head>
+
 <div class="w-full h-full">
-	<Header />
+	<Navbar />
 	<main>
 		<slot />
 	</main>
