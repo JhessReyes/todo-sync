@@ -13,15 +13,15 @@
 				<ul class="list-none sm:flex hidden justify-end items-center flex-1">
 					<li
 						class="text-[16px] cursor-pointer"
-						aria-current={$page.url.pathname === '/' ? 'page' : undefined}
+						aria-current={$page.url.pathname === '/planned' ? 'page' : undefined}
 					>
-						<a href="/">PLANEADO</a>
+						<a href="/planned">PLANEADO</a>
 					</li>
 					<li
 						class="ml-20 text-[16px] cursor-pointer"
-						aria-current={$page.url.pathname === '/' ? 'page' : undefined}
+						aria-current={$page.url.pathname === '/finished' ? 'page' : undefined}
 					>
-						<a href="/">TERMINADO</a>
+						<a href="/finished">TERMINADO</a>
 					</li>
 				</ul>
 			</div>
