@@ -1,7 +1,12 @@
 <script>
 	import { page } from '$app/stores';
+	import GoogleAuth from '../../../providers/GoogleAuth/index.svelte';
 </script>
 
+<svelte:head>
+	<script async defer src="https://apis.google.com/js/api.js" on:load={() => gapiLoaded()}></script>
+	<script async defer src="https://accounts.google.com/gsi/client" on:load={() => gisLoaded()}></script>
+</svelte:head>
 <header>
 	<div class="mx-auto h-24 navbar">
 		<div class="flex-1 h-24" aria-current={$page.url.pathname === '/planned' ? 'page' : undefined}>
@@ -31,9 +36,8 @@
 					<li
 						class="text-[16px] cursor-pointer"
 						aria-current={$page.url.pathname === '/' ? 'page' : undefined}
-					>
-						<a href="/">user</a>
-					</li>
+					/>
+					<GoogleAuth/>
 				</ul>
 			</div>
 		</nav>
