@@ -1,6 +1,7 @@
-<script>
+<script lang="ts">
 	import { page } from '$app/stores';
 	import GoogleAuth from '../../../providers/GoogleAuth/index.svelte';
+
 </script>
 
 <svelte:head>
@@ -38,8 +39,10 @@
 						aria-current={$page.url.pathname === '/' ? 'page' : undefined}
 					/>
 					<GoogleAuth/>
+
 				</ul>
 			</div>
 		</nav>
 	</div>
+	
 </header>

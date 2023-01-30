@@ -3,7 +3,7 @@
 	<script async defer src="https://accounts.google.com/gsi/client" on:load={() => gisLoaded()}></script>
 </svelte:head>
 
-<script type="text/javascript">
+<script lang="ts">
 	// TODO(developer): Set to client ID and API key from the Developer Console
 	const CLIENT_ID = '658523415599-q4q5ote7qp7vpfoj5ft0278uj2dk5bpt.apps.googleusercontent.com';
 	const API_KEY = 'AIzaSyBdZ_MbayckF0Gzy2uuHKBMpVuXMoSTrB4';
@@ -101,7 +101,9 @@
 	 * the authorized user's calendar. If no events are found an
 	 * appropriate message is printed.
 	 */
-	async function listUpcomingEvents() {
+	export let allEvents: string[] = [];
+	
+	export async function listUpcomingEvents() {
 		let response;
 		try {
 			const request = {
@@ -113,27 +115,26 @@
 				orderBy: 'startTime'
 			};
 			response = await gapi.client.calendar.events.list(request);
-			/* console.log(response); */
 		} catch (err) {
-			/* console.log(err); */
-			/* document.getElementById('content').innerText = err.message; */
+			console.log(err);
 			return;
 		}
 
 		const events = response.result.items;
 
 		if (!events || events.length == 0) {
-			/* document.getElementById('content').innerText = 'No events found.'; */
+			//'No events found.'
 			return;
 		}
-		/* $: console.table(events.body.summary); */
+
+		
 		// Flatten to string to display
-		const output = events.reduce(
+		const task = events.reduce(
 			(str, event) => `${str}${event.summary} (${event.start.dateTime || event.start.date})\n`,
 			'Events:\n'
 		);
-		console.log(output);
-		/* document.getElementById('content').innerText = output; */
+		allEvents.push(events)
+		console.log(allEvents);
 	}
 </script>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import InputTask from '../../atoms/InputTask/index.svelte';
 	import ModalDate from '../../atoms/ModalDate/index.svelte';
-
+	export let allEvents: Array<[]> = [];
 	interface Todo {
 		task: string;
 		isComplete: boolean;
@@ -9,7 +9,7 @@
 		completeAt: string;
 	}
 
-	let todos: Todo[] = [];
+	export let todos: Todo[] = [];
 
 	let todo: Todo = {
 		task: '',
@@ -26,13 +26,14 @@
 			completeAt: ''
 		};
 	};
+	
 	const addTodo = (): void => {
 		todos = [...todos, todo];
 		resetTodo();
 	};
 
-	$: console.log(todo.task);
-	$: console.table(todos);
+	/* 	$: console.log(todo.task);
+	$: console.table(todos); */
 </script>
 
 <div class="rounded md:w-50 h-full">
