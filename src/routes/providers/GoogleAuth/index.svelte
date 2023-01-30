@@ -1,5 +1,6 @@
 <svelte:head>
-	<script async defer src="https://apis.google.com/js/api.js" on:load={() => gapiLoaded()}></script>
+	<!-- <script src="https://apis.google.com/js/platform.js" async defer></script>
+	 --><script async defer src="https://apis.google.com/js/api.js" on:load={() => gapiLoaded()}></script>
 	<script async defer src="https://accounts.google.com/gsi/client" on:load={() => gisLoaded()}></script>
 </svelte:head>
 
@@ -72,6 +73,7 @@
 			}
 			sigIn = true;
 			await listUpcomingEvents();
+			await userLoggedIn();
 		};
 
 		if (gapi.client.getToken() === null) {
@@ -80,7 +82,7 @@
 			tokenClient.requestAccessToken({ prompt: 'consent' });
 		} else {
 			// Skip display of account chooser and consent dialog for an existing session.
-			tokenClient.requestAccessToken({ prompt: '' });
+			tokenClient.requestAccessToken({ prompt: '' });		
 		}
 	}
 
@@ -96,6 +98,16 @@
 		}
 	}
 
+	async function userLoggedIn(googleUser) {
+		const profile = google.accounts.auth2.currentUser.get().getBasicProfile();
+		/* const profile = google.accounts.auth2.currentUser.get().getBasicProfile();
+		 */
+		console.log('asdfs');
+		console.log('ID: ' + profile.getId());
+		console.log('Name: ' + profile.getName());
+		console.log('Image URL: ' + profile.getImageUrl());
+		console.log('Email: ' + profile.getEmail());
+	}
 	/**
 	 * Print the summary and start datetime/date of the next ten events in
 	 * the authorized user's calendar. If no events are found an

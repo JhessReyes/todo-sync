@@ -3,31 +3,14 @@
 	import { onMount } from 'svelte';
 
 	let allEvents: Array<[]> = [];
-	const month = [
-		'January',
-		'February',
-		'March',
-		'April',
-		'May',
-		'June',
-		'July',
-		'August',
-		'September',
-		'October',
-		'November',
-		'December'
-	];
 
 	onMount(async () => {
 		let response;
-		let d = new Date();
-
-		console.log(new Date(d.getFullYear(), d.getMonth(), 1).toISOString());
 		allEvents = [];
 		try {
 			const request = {
 				calendarId: 'primary',
-				timeMin: new Date(d.getFullYear(), d.getMonth(), 1).toISOString(),
+				timeMin: new Date().toISOString(),
 				showDeleted: false,
 				singleEvents: true,
 				maxResults: 10,
