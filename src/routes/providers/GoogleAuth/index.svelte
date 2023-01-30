@@ -1,6 +1,6 @@
 <svelte:head>
-	<!-- <script src="https://apis.google.com/js/platform.js" async defer></script>
-	 --><script async defer src="https://apis.google.com/js/api.js" on:load={() => gapiLoaded()}></script>
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<script async defer src="https://apis.google.com/js/api.js" on:load={() => gapiLoaded()}></script>
 	<script async defer src="https://accounts.google.com/gsi/client" on:load={() => gisLoaded()}></script>
 </svelte:head>
 
@@ -16,11 +16,11 @@
 	// included, separated by spaces.
 	const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
 
-	export let tokenClient;
+	export let tokenClient = '';
 	export let gapiInited = false;
 	export let gisInited = false;
 	export let sigIn = false;
-
+	let container;
 	/**
 	 * Callback after api.js is loaded.
 	 */
@@ -99,9 +99,11 @@
 	}
 
 	async function userLoggedIn(googleUser) {
-		const profile = google.accounts.auth2.currentUser.get().getBasicProfile();
+		const profile = gapi.auth;
 		/* const profile = google.accounts.auth2.currentUser.get().getBasicProfile();
 		 */
+
+		 console.log(profile);
 		console.log('asdfs');
 		console.log('ID: ' + profile.getId());
 		console.log('Name: ' + profile.getName());
@@ -145,7 +147,6 @@
 			(str, event) => `${str}${event.summary} (${event.start.dateTime || event.start.date})\n`,
 			'Events:\n'
 		);
-		allEvents.push(events)
 		console.log(allEvents);
 	}
 </script>
@@ -161,7 +162,11 @@
 				/>
 			</div>
 		</div>
+		
 	{:else if sigIn}
+	<div bind:this={container}>
+			<slot />
+	</div>
 		<div class="avatar">
 			<div class="w-10 rounded-xl">
 				<img
