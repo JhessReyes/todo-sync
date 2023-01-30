@@ -35,7 +35,7 @@
 	$: console.table(todos);
 </script>
 
-<div class="rounded-xl shadow-xl md:w-50 h-full">
+<div class="rounded md:w-50 h-full">
 	<div class="mx-10 my-10 flex">
 		<InputTask bind:task={todo.task} />
 		<ModalDate bind:completeAt={todo.completeAt} />
