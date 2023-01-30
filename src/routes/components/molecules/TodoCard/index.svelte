@@ -1,5 +1,6 @@
 <script lang="ts">
 	import InputTask from '../../atoms/InputTask/index.svelte';
+	import ModalDate from '../../atoms/ModalDate/index.svelte';
 
 	interface Todo {
 		task: string;
@@ -35,11 +36,13 @@
 </script>
 
 <div class="rounded-xl shadow-xl md:w-50 h-full">
-	<InputTask bind:task={todo.task} />
-	<input type="date" aria-placeholder="Agrega un plan" bind:value={todo.completeAt} />
-	{#if todo.task != ''}
-		<button on:click={addTodo}>Add</button>
-	{/if}
+	<div class="mx-10 my-10 flex">
+		<InputTask bind:task={todo.task} />
+		<ModalDate bind:completeAt={todo.completeAt} />
+		{#if todo.task != ''}
+			<button class="btn btn-primary" on:click={addTodo}>+</button>
+		{/if}
+	</div>
 	<ul>
 		{#each todos as t}
 			<li>
@@ -56,7 +59,7 @@
 								class="checkbox checkbox-secondary"
 							/>
 							{#if t.completeAt == ''}
-								<button>Agregar Fecha de Vencimiento</button>
+								<button class="btn btn-secondary">Agregar Fecha de Vencimiento</button>
 							{/if}
 						</div>
 					</label>
