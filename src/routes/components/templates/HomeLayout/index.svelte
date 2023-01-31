@@ -1,60 +1,28 @@
 <script lang="ts">
 	import TodoCard from '../../molecules/TodoCard/index.svelte';
+	import { getEventsPlanned } from '../../../providers/GoogleCalendar';
 	import { onMount } from 'svelte';
-
-	let allEvents: Array<[]> = [];
-	const month = [
-		'January',
-		'February',
-		'March',
-		'April',
-		'May',
-		'June',
-		'July',
-		'August',
-		'September',
-		'October',
-		'November',
-		'December'
-	];
+	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
+	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : '';
+	let promise = Promise.resolve([]);
 
 	onMount(async () => {
-		let response;
-		let d = new Date();
-
-		console.log(new Date(d.getFullYear(), d.getMonth(), 1).toISOString());
-		allEvents = [];
-		try {
-			const request = {
-				calendarId: 'primary',
-				timeMin: new Date(d.getFullYear(), d.getMonth(), 1).toISOString(),
-				showDeleted: false,
-				singleEvents: true,
-				maxResults: 10,
-				orderBy: 'startTime'
-			};
-			response = await gapi.client.calendar.events.list(request);
-			console.log(response.result.items);
-		} catch (err) {
-			console.log(err);
-			return;
+		if (!accessToken) {
+			goto('/auth');
 		}
-
-		const events = response.result.items;
-
-		if (!events || events.length == 0) {
-			//'No events found.'
-			return;
-		} /* 
-		console.log(events); */
-		allEvents = events;
+		setTimeout(() => {
+			promise = getEventsPlanned(accessToken);
+			console.log(promise);
+		}, 500);
 	});
 </script>
 
 <div>
-	<!-- 	<TodoCard allEvents={allEvents}/> -->
-	{#each allEvents as t, i}
-		<li>
+	{#await promise}
+		<div>Cargando...</div>
+	{:then res}
+		{#each res.result.items as t}
 			<div class="form-control">
 				<label class="cursor-pointer label">
 					<div class="card-body">
@@ -73,10 +41,10 @@
 					</div>
 				</label>
 			</div>
-		</li>
-	{:else}
-		this block renders when photos.length === 0
-		<p>loading...</p>
-	{/each}
+		{/each}
+	{:catch error}
+		<p style="color: red">{error.message}</p>
+	{/await}
+	<!-- 	<TodoCard allEvents={allEvents}/> -->
 	<!-- 	<TodoCard {allEvents} /> -->
 </div>

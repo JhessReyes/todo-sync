@@ -10,9 +10,15 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-const SCOPES = [
+/**
+ * 'https://www.googleapis.com/auth/userinfo.profile',
 	'https://www.googleapis.com/auth/calendar.readonly',
-	'https://www.googleapis.com/auth/userinfo.profile'
+	'https://www.googleapis.com/auth/calendar',
+	'https://www.googleapis.com/auth/calendar.events',
+	'https://www.googleapis.com/auth/calendar.events.readonly'
+ */
+const SCOPES = [
+	'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.events.readonly'
 ];
 
 export let tokenClient = '';
@@ -49,7 +55,6 @@ export function gisLoaded() {
 	tokenClient = google.accounts.oauth2.initTokenClient({
 		client_id: CLIENT_ID,
 		scope: SCOPES[0],
-		scope: SCOPES[1],
 		callback: '' // defined later
 	});
 	gisInited = true;
@@ -71,14 +76,11 @@ export function handleAuthClick() {
 			throw resp;
 		}
 		sigIn = true;
-		console.log(gapi.client);
 		tokenWeb = gapi.client.getToken().access_token;
 		userLoggedIn(tokenWeb);
 		sessionStore('accessToken', tokenWeb);
-		/* 		await listUpcomingEvents();*/
-		/* await userLoggedIn(); */
-		/* invalidate((url) => url.pathname === '/path');
-		 */
+		localStore('gClient', gapi);
+		await listUpcomingEvents();
 		setTimeout(() => {
 			goto('/');
 		}, 500);
@@ -88,9 +90,8 @@ export function handleAuthClick() {
 		// when establishing a new session.
 		tokenClient.requestAccessToken({ prompt: 'consent' });
 	} else {
-		sigIn = true;
-		// Skip display of account chooser and consent dialog for an existing session.
-		tokenClient.requestAccessToken({ prompt: '' });
+		tokenWeb = gapi.client.getToken().access_token;
+		console.log(tokenWeb);
 	}
 }
 
@@ -106,6 +107,11 @@ export function checkLogged() {
 	logged = sigIn;
 
 	return logged;
+}
+
+export function verifyToken(token: string) {
+	gapi.client.setToken(token);
+	console.log(gapi.client);
 }
 
 /**
@@ -147,7 +153,45 @@ export async function userLoggedIn(access_token: string) {
 	}
 }
 
+export let allEvents: string[] = [];
+
+export async function listUpcomingEvents() {
+	let response;
+	try {
+		const request = {
+			calendarId: 'primary',
+			timeMin: new Date().toISOString(),
+			showDeleted: false,
+			singleEvents: true,
+			maxResults: 10,
+			orderBy: 'startTime'
+		};
+		response = await gapi.client.calendar.events.list(request);
+	} catch (err) {
+		console.log(err);
+		return;
+	}
+
+	const events = response.result.items;
+
+	if (!events || events.length == 0) {
+		//'No events found.'
+		return;
+	}
+
+	// Flatten to string to display
+	const task = events.reduce(
+		(str, event) => `${str}${event.summary} (${event.start.dateTime || event.start.date})\n`,
+		'Events:\n'
+	);
+	console.log(allEvents);
+}
+
 function sessionStore(field: string, value: string) {
+	if (browser) window.sessionStorage.setItem(field, value);
+}
+
+function localStore(field: string, value) {
 	if (browser) window.sessionStorage.setItem(field, value);
 }
 
@@ -161,5 +205,6 @@ export default {
 	checkLogged,
 	tokenWeb,
 	userLoggedIn,
-	handleSignoutClick
+	handleSignoutClick,
+	verifyToken
 };
