@@ -29,7 +29,20 @@
 						<div class={t.isComplete ? 'line-through italic' : ''}>
 							<h2 class="card-title text-primary capitalize">{t.summary}</h2>
 						</div>
-						<h4 class="text-primary text-[16px] italic py-2">{t.end.date || t.end.dateTime}</h4>
+						<div class="justify-end">
+							<div class="flex">
+								<strong class="my-2 mx-2">Inicio: </strong>
+								<h4 class="text-primary text-[16px] italic py-2">
+									{t.start.date || t.start.dateTime}
+								</h4>
+							</div>
+							<div class="flex">
+								<strong class="my-2 mx-2">Fin: </strong>
+								<h4 class="text-primary text-[16px] italic py-2">
+									{t.end.date || t.end.dateTime}
+								</h4>
+							</div>
+						</div>
 						<input
 							type="checkbox"
 							bind:checked={t.isComplete}
@@ -45,6 +58,6 @@
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}
-	<!-- 	<TodoCard allEvents={allEvents}/> -->
+	<TodoCard />
 	<!-- 	<TodoCard {allEvents} /> -->
 </div>
