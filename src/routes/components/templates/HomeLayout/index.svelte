@@ -2,12 +2,41 @@
 	import InputTask from '../../atoms/InputTask/index.svelte';
 	import ModalDate from '../../atoms/ModalDate/index.svelte';
 	import Card from '../../molecules/Card/index.svelte';
-	import { getEventsPlanned } from '../../../providers/GoogleCalendar';
+	import { getEventsPlanned, createEvent } from '../../../providers/GoogleCalendar';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : '';
 	let promise = Promise.resolve([]);
+	interface Todo {
+		endAt: string;
+		startAt: string;
+		summary: string;
+	}
+
+	let todo: Todo = {
+		summary: '',
+		startAt: new Date().toISOString(),
+		endAt: new Date().toISOString()
+	};
+	/* 	let summary = '';
+	let endAt = new Date().toISOString();
+	let = new Date().toISOString();
+ */
+	const resetTodo = (): void => {
+		todo = {
+			summary: '',
+			startAt: new Date().toISOString(),
+			endAt: new Date().toISOString()
+		};
+	};
+
+	const createTodo = (): void => {
+		/* console.log(todo.startAt); */
+
+		createEvent(accessToken, todo.summary, todo.endAt, todo.startAt);
+		resetTodo();
+	};
 
 	onMount(async () => {
 		if (!accessToken) {
@@ -21,15 +50,15 @@
 </script>
 
 <div>
-	<div class="mx-10 my-10 flex justify-center">
-		<ModalDate desc="Inicio" />
-		<div class="mx-5">
-			<InputTask />
+	<div class="mx-10 my-10 sm:flex justify-center">
+		<ModalDate bind:completeAt={todo.startAt} desc="Inicio" />
+		<div class="mx-5 my-5">
+			<InputTask bind:task={todo.summary} />
 		</div>
-		<ModalDate desc="Fin" />
-		<!-- {#if todo.task != ''}
-			<button class="btn btn-primary" on:click={addTodo}>+</button>
-		{/if} -->
+		<ModalDate bind:completeAt={todo.endAt} desc="Fin" />
+		{#if todo.summary != ''}
+			<button class="btn btn-primary" on:click={() => createTodo()}>+</button>
+		{/if}
 	</div>
 	{#await promise}
 		<progress class="progress w-full h-2" />

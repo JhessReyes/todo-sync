@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let completeAt = '';
+	export let completeAt: any;
 	export let desc = '';
 </script>
 
