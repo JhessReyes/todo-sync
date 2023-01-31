@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-/* 	import { browser } from '/environment';
-	let picture = browser ? window.sessionStorage.getItem('accessToken') : ''; */
+	import { handleSignoutClick } from '../../../auth/index';
 	export let linkPicture = '';
 </script>
 
@@ -42,7 +41,7 @@
 					<div>
 						<div class="avatar">
 							<div class="w-12 rounded-xl mx-5">
-								<button class="text-red-500 font-bold rounded-lg" href={linkPicture} on:click={() => console.log("test")}> 
+								<button class="text-red-500 font-bold rounded-lg" on:click={() => handleSignoutClick()}> 
 									<img class="cursor-pointer" src={linkPicture}/>
 									SALIR
 								</button>

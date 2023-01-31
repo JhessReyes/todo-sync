@@ -108,6 +108,28 @@ export function checkLogged() {
 	return logged;
 }
 
+/**
+ *  Sign out the user upon button click.
+ */
+export function handleSignoutClick() {
+	const token = gapi.client.getToken();
+	if (token !== null) {
+		google.accounts.oauth2.revoke(token.access_token);
+		gapi.client.setToken('');
+		if (browser) {
+			sessionStorage.removeItem('userId');
+			sessionStorage.removeItem('name');
+			sessionStorage.removeItem('givenName');
+			sessionStorage.removeItem('accessToken');
+			sessionStorage.removeItem('picture');
+		}
+		setTimeout(() => {
+			goto('/auth');
+		}, 500);
+		sigIn = false;
+	}
+}
+
 export async function userLoggedIn(access_token: string) {
 	try {
 		fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + access_token)
@@ -136,5 +158,6 @@ export default {
 	sigIn,
 	checkLogged,
 	tokenWeb,
-	userLoggedIn
+	userLoggedIn,
+	handleSignoutClick
 };
