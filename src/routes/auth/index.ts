@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
 
 // TODO(developer): Set to client ID and API key from the Developer Console
 const CLIENT_ID = '658523415599-q4q5ote7qp7vpfoj5ft0278uj2dk5bpt.apps.googleusercontent.com';
@@ -70,10 +71,17 @@ export function handleAuthClick() {
 			throw resp;
 		}
 		sigIn = true;
-		tokenWeb = gapi.client.getToken();
-		sessionStore('googleToken', gapi.client.getToken().access_token);
+		console.log(gapi.client);
+		tokenWeb = gapi.client.getToken().access_token;
+		userLoggedIn(tokenWeb);
+		sessionStore('accessToken', tokenWeb);
 		/* 		await listUpcomingEvents();*/
 		/* await userLoggedIn(); */
+		/* invalidate((url) => url.pathname === '/path');
+		 */
+		setTimeout(() => {
+			goto('/');
+		}, 500);
 	};
 	if (gapi.client.getToken() === null) {
 		// Prompt the user to select a Google Account and ask for consent to share their data
@@ -100,15 +108,19 @@ export function checkLogged() {
 	return logged;
 }
 
-async function userLoggedIn(googleUser) {
-	const profile = googleUser.getBasicProfile();
-
-	console.log(profile);
-	console.log('asdfs');
-	console.log('ID: ' + profile.getId());
-	console.log('Name: ' + profile.getName());
-	console.log('Image URL: ' + profile.getImageUrl());
-	console.log('Email: ' + profile.getEmail());
+export async function userLoggedIn(access_token: string) {
+	try {
+		fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + access_token)
+			.then((response) => response.json())
+			.then((data) => {
+				sessionStore('userId', data.id);
+				sessionStore('name', data.name);
+				sessionStore('givenName', data.given_name);
+				sessionStore('picture', data.picture);
+			});
+	} catch (error) {
+		console.log(error);
+	}
 }
 
 function sessionStore(field: string, value: string) {
@@ -123,5 +135,6 @@ export default {
 	gisInited,
 	sigIn,
 	checkLogged,
-	tokenWeb
+	tokenWeb,
+	userLoggedIn
 };

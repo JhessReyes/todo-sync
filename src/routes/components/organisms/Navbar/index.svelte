@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import GoogleAuth from '../../../providers/GoogleAuth/index.svelte';
-
+/* 	import { browser } from '/environment';
+	let picture = browser ? window.sessionStorage.getItem('accessToken') : ''; */
+	export let linkPicture = '';
 </script>
 
 <svelte:head>
@@ -38,8 +39,16 @@
 						class="text-[16px] cursor-pointer"
 						aria-current={$page.url.pathname === '/' ? 'page' : undefined}
 					/>
-					<GoogleAuth/>
-
+					<div>
+						<div class="avatar">
+							<div class="w-12 rounded-xl mx-5">
+								<button class="text-red-500 font-bold rounded-lg" href={linkPicture} on:click={() => console.log("test")}> 
+									<img class="cursor-pointer" src={linkPicture}/>
+									SALIR
+								</button>
+							</div>
+						</div>
+					</div>
 				</ul>
 			</div>
 		</nav>

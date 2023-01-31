@@ -1,15 +1,9 @@
 <script lang="ts">
-	import {
-		gisInited,
-		gapiInited,
-		gapiLoaded,
-		gisLoaded,
-		maybeEnableButtons,
-		handleAuthClick
-	} from './index';
-
-	export let token = '';
+	import { handleAuthClick } from './index';
+	/* 	import { browser } from '$app/environment';
+	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : ''; */
 </script>
 
-<button class="btn btn-primary" on:click={handleAuthClick}>LISTO</button>
-<h1>{token}</h1>
+<div>
+	<button class="btn btn-primary" on:click={handleAuthClick}>LISTO</button>
+</div>

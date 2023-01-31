@@ -2,34 +2,25 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import Navbar from './components/organisms/Navbar/index.svelte';
-	import {
-		gisInited,
-		gapiInited,
-		gapiLoaded,
-		gisLoaded,
-		maybeEnableButtons,
-		checkLogged,
-		tokenWeb
-	} from './auth/index';
+	import { gisInited, gapiInited, gapiLoaded, gisLoaded } from './auth/index';
 	import AuthPage from './auth/+page.svelte';
-	/* import GoogleAuth from './providers/GoogleAuth/index.svelte';
-	 */
-
-	let googleToken = browser ? window.sessionStorage.getItem('googleToken') : '';
-	let sigIn = false;
+	import Navbar from './components/organisms/Navbar/index.svelte';
+	import { goto } from '$app/navigation';
+	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : '';
 	let ready = false;
+
 	onMount(async () => {
-		maybeEnableButtons();
 		gisLoaded();
 		gapiLoaded();
 		setTimeout(() => {
 			if (gisInited && gapiInited) {
 				ready = true;
+				if (!accessToken) {
+					goto('/auth');
+				}
 			}
-		}, 2000);
+		}, 500);
 	});
-	console.log(googleToken);
 </script>
 
 <svelte:head>
@@ -44,19 +35,9 @@
 	<script async defer src="https://accounts.google.com/gsi/client" on:load={gisLoaded}></script>
 </svelte:head>
 
-{#if ready}
-	<AuthPage token={googleToken} />
-	<div class="w-full h-full">
-		<Navbar />
-		<main>
-			<slot />
-			<!-- <div class="g-signin2" data-longtitle="true" data-onsuccess={() => authenticate()} />
-			-->
-			<!-- <button on:click={signOut}>Sign out</button> -->
-			<!-- 
-				<button on:click={() => authenticate()}>Sign out</button>
-			-->
-		</main>
-		<footer />
-	</div>
-{/if}
+<div class="w-full h-full">
+	<main>
+		<slot />
+	</main>
+	<footer />
+</div>
