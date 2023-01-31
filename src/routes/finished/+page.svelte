@@ -20,7 +20,7 @@
 	<Navbar linkPicture={picture} />
 	<div class="sm:columns-1 columns-1 w-full">
 		<div class="overflow-auto rounded-xl shadow-xl">
-			<h1 class="text-lg text-center text-primary font-extrabold">PLANEADO</h1>
+			<h1 class="text-lg text-center text-primary font-extrabold">EVENTOS VENCIDOS</h1>
 			<FinishedLayout />
 		</div>
 	</div>

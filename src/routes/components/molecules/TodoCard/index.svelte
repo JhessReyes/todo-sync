@@ -9,7 +9,7 @@
 		completeAt: string;
 	}
 
-	export let todos: Todo[] = [];
+	export let todos: any[] = [];
 
 	let todo: Todo = {
 		task: '',
@@ -41,10 +41,30 @@
 		<div class="form-control">
 			<label class="cursor-pointer label">
 				<div class="card-body">
-					<div class={t.isComplete ? 'line-through italic' : ''}>
-						<h2 class="card-title text-primary capitalize">{t.task}</h2>
+					<div class="flex">
+						<input
+							type="checkbox"
+							bind:checked={t.isComplete}
+							class="checkbox checkbox-secondary mx-5"
+						/>
+						<div class={t.isComplete ? 'line-through italic' : ''}>
+							<h2 class="card-title text-primary capitalize">{t.task}</h2>
+						</div>
 					</div>
-					<h4 class="text-primary text-[16px] italic py-2">{t.completeAt}</h4>
+					<div class="justify-end">
+						<div class="flex">
+							<strong class="my-2 mx-2">Inicio: </strong>
+							<h4 class="text-primary text-[16px] italic py-2">
+								{t.start.date || t.start.dateTime}
+							</h4>
+						</div>
+						<div class="flex">
+							<strong class="my-2 mx-2">Fin: </strong>
+							<h4 class="text-primary text-[16px] italic py-2">
+								{t.end.date || t.end.dateTime}
+							</h4>
+						</div>
+					</div>
 					<input type="checkbox" bind:checked={t.isComplete} class="checkbox checkbox-secondary" />
 					{#if t.completeAt == ''}
 						<button class="btn btn-secondary">Agregar Fecha de Vencimiento</button>
