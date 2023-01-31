@@ -1,65 +1,61 @@
 <script lang="ts">
 	import TodoCard from '../../molecules/TodoCard/index.svelte';
+	import { getEventsFinished } from '../../../providers/GoogleCalendar';
 	import { onMount } from 'svelte';
-
-	let allEvents: Array<[]> = [];
+	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
+	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : '';
+	let promise = Promise.resolve([]);
 
 	onMount(async () => {
-		let response;
-		allEvents = [];
-		try {
-			const request = {
-				calendarId: 'primary',
-				timeMin: new Date().toISOString(),
-				showDeleted: false,
-				singleEvents: true,
-				maxResults: 10,
-				orderBy: 'startTime'
-			};
-			response = await gapi.client.calendar.events.list(request);
-			console.log(response.result.items);
-		} catch (err) {
-			console.log(err);
-			return;
+		if (!accessToken) {
+			goto('/auth');
 		}
-
-		const events = response.result.items;
-
-		if (!events || events.length == 0) {
-			//'No events found.'
-			return;
-		} /* 
-		console.log(events); */
-		allEvents = events;
+		setTimeout(() => {
+			promise = getEventsFinished(accessToken);
+			console.log(promise);
+		}, 500);
 	});
 </script>
 
 <div>
-	<!-- 	<TodoCard allEvents={allEvents}/> -->
-	{#each allEvents as t, i}
-		<li>
+	{#await promise}
+		<progress class="progress w-full h-2" />
+	{:then res}
+		{#each res.result.items as t}
 			<div class="form-control">
 				<label class="cursor-pointer label">
 					<div class="card-body">
-						<div class={t.isComplete ? 'line-through italic' : ''}>
-							<h2 class="card-title text-primary capitalize">{t.summary}</h2>
+						<div class="flex">
+							<input type="checkbox" checked={true} class="checkbox checkbox-secondary mx-2" />
+							<div class={true ? 'line-through italic' : ''}>
+								<h2 class="card-title text-primary capitalize">{t.summary}</h2>
+							</div>
 						</div>
-						<h4 class="text-primary text-[16px] italic py-2">{t.end.date || t.end.dateTime}</h4>
-						<input
-							type="checkbox"
-							bind:checked={t.isComplete}
-							class="checkbox checkbox-secondary"
-						/>
+						<div class="justify-end">
+							<div class="flex">
+								<strong class="my-2 mx-2">Inicio: </strong>
+								<h4 class="text-primary text-[16px] italic py-2">
+									{t.start.date || t.start.dateTime}
+								</h4>
+							</div>
+							<div class="flex">
+								<strong class="my-2 mx-2">Fin: </strong>
+								<h4 class="text-primary text-[16px] italic py-2">
+									{t.end.date || t.end.dateTime}
+								</h4>
+							</div>
+						</div>
 						{#if t.completeAt == ''}
 							<button class="btn btn-secondary">Agregar Fecha de Vencimiento</button>
 						{/if}
 					</div>
 				</label>
 			</div>
-		</li>
-	{:else}
-		this block renders when photos.length === 0
-		<p>loading...</p>
-	{/each}
+		{/each}
+	{:catch error}
+		<p style="color: red">{error.message}</p>
+	{/await}
+
 	<!-- 	<TodoCard {allEvents} /> -->
 </div>

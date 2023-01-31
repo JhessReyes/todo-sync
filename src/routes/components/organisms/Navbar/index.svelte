@@ -4,14 +4,13 @@
 	export let linkPicture = '';
 </script>
 
-<svelte:head>
-	<script async defer src="https://apis.google.com/js/api.js" on:load={() => gapiLoaded()}></script>
-	<script async defer src="https://accounts.google.com/gsi/client" on:load={() => gisLoaded()}></script>
-</svelte:head>
 <header>
 	<div class="mx-auto h-24 navbar">
 		<div class="flex-1 h-24" aria-current={$page.url.pathname === '/planned' ? 'page' : undefined}>
-			<a href="/"> LOGO </a>
+			<button class="btn-ghost btn-lg rounded-2xl"
+				><i class="fa fa-tasks text-primary" style="font-size:48px" />
+			</button>
+			<a href="/" />
 		</div>
 
 		<nav>
@@ -41,9 +40,11 @@
 					<div>
 						<div class="avatar">
 							<div class="w-12 rounded-xl mx-5">
-								<button class="text-red-500 font-bold rounded-lg" on:click={() => handleSignoutClick()}> 
-									<img class="cursor-pointer" src={linkPicture}/>
-									SALIR
+								<button
+									class="text-red-500 font-bold rounded-lg"
+									on:click={() => handleSignoutClick()}
+								>
+									<img class="cursor-pointer" src={linkPicture} />
 								</button>
 							</div>
 						</div>
@@ -52,5 +53,4 @@
 			</div>
 		</nav>
 	</div>
-	
 </header>

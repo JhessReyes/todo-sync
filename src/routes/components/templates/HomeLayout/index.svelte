@@ -1,11 +1,42 @@
 <script lang="ts">
-	import TodoCard from '../../molecules/TodoCard/index.svelte';
-	import { getEventsPlanned } from '../../../providers/GoogleCalendar';
+	import InputTask from '../../atoms/InputTask/index.svelte';
+	import ModalDate from '../../atoms/ModalDate/index.svelte';
+	import Card from '../../molecules/Card/index.svelte';
+	import { getEventsPlanned, createEvent } from '../../../providers/GoogleCalendar';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : '';
 	let promise = Promise.resolve([]);
+	interface Todo {
+		endAt: string;
+		startAt: string;
+		summary: string;
+	}
+
+	let todo: Todo = {
+		summary: '',
+		startAt: new Date().toISOString(),
+		endAt: new Date().toISOString()
+	};
+	/* 	let summary = '';
+	let endAt = new Date().toISOString();
+	let = new Date().toISOString();
+ */
+	const resetTodo = (): void => {
+		todo = {
+			summary: '',
+			startAt: new Date().toISOString(),
+			endAt: new Date().toISOString()
+		};
+	};
+
+	const createTodo = (): void => {
+		/* console.log(todo.startAt); */
+
+		createEvent(accessToken, todo.summary, todo.endAt, todo.startAt);
+		resetTodo();
+	};
 
 	onMount(async () => {
 		if (!accessToken) {
@@ -19,22 +50,50 @@
 </script>
 
 <div>
+	<div class="mx-10 my-10 sm:flex justify-center">
+		<ModalDate bind:completeAt={todo.startAt} desc="Inicio" />
+		<div class="mx-5 my-5">
+			<InputTask bind:task={todo.summary} />
+		</div>
+		<ModalDate bind:completeAt={todo.endAt} desc="Fin" />
+		{#if todo.summary != ''}
+			<button class="btn btn-primary" on:click={() => createTodo()}>+</button>
+		{/if}
+	</div>
 	{#await promise}
-		<div>Cargando...</div>
+		<progress class="progress w-full h-2" />
 	{:then res}
+		<!-- 		{#each res.result.items as t}
+			<Card {t} />
+		{/each} -->
 		{#each res.result.items as t}
 			<div class="form-control">
 				<label class="cursor-pointer label">
 					<div class="card-body">
-						<div class={t.isComplete ? 'line-through italic' : ''}>
-							<h2 class="card-title text-primary capitalize">{t.summary}</h2>
+						<div class="flex">
+							<input
+								type="checkbox"
+								bind:checked={t.isComplete}
+								class="checkbox checkbox-secondary mx-2"
+							/>
+							<div class={t.isComplete ? 'line-through italic' : ''}>
+								<h2 class="card-title text-primary capitalize">{t.summary}</h2>
+							</div>
 						</div>
-						<h4 class="text-primary text-[16px] italic py-2">{t.end.date || t.end.dateTime}</h4>
-						<input
-							type="checkbox"
-							bind:checked={t.isComplete}
-							class="checkbox checkbox-secondary"
-						/>
+						<div class="justify-end">
+							<div class="flex">
+								<strong class="my-2 mx-2">Inicio: </strong>
+								<h4 class="text-primary text-[16px] italic py-2">
+									{t.start.date || t.start.dateTime}
+								</h4>
+							</div>
+							<div class="flex">
+								<strong class="my-2 mx-2">Fin: </strong>
+								<h4 class="text-primary text-[16px] italic py-2">
+									{t.end.date || t.end.dateTime}
+								</h4>
+							</div>
+						</div>
 						{#if t.completeAt == ''}
 							<button class="btn btn-secondary">Agregar Fecha de Vencimiento</button>
 						{/if}
@@ -45,6 +104,4 @@
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}
-	<!-- 	<TodoCard allEvents={allEvents}/> -->
-	<!-- 	<TodoCard {allEvents} /> -->
 </div>

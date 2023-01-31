@@ -18,7 +18,7 @@
 
 <section class="mr-10 ml-10" id="home">
 	<Navbar linkPicture={picture} />
-	<div class="sm:columns-2 columns-1 w-full">
+	<div class="sm:columns-1 columns-1 w-full">
 		<div class="overflow-auto rounded-xl shadow-xl">
 			<h1 class="text-lg text-center text-primary font-extrabold">PLANEADO</h1>
 			<HomeLayout />
