@@ -111,22 +111,24 @@ export function checkLogged() {
 /**
  *  Sign out the user upon button click.
  */
-export function handleSignoutClick() {
+export async function handleSignoutClick() {
 	const token = gapi.client.getToken();
-	if (token !== null) {
-		google.accounts.oauth2.revoke(token.access_token);
-		gapi.client.setToken('');
-		if (browser) {
+	if (browser) {
+		let accessToken = browser ? window.sessionStorage.getItem('accessToken') : '';
+		if (accessToken !== null) {
+			google.accounts.oauth2.revoke(accessToken);
+			gapi.client.setToken('');
 			sessionStorage.removeItem('userId');
 			sessionStorage.removeItem('name');
 			sessionStorage.removeItem('givenName');
 			sessionStorage.removeItem('accessToken');
 			sessionStorage.removeItem('picture');
+
+			setTimeout(() => {
+				goto('/auth');
+			}, 500);
+			sigIn = false;
 		}
-		setTimeout(() => {
-			goto('/auth');
-		}, 500);
-		sigIn = false;
 	}
 }
 
