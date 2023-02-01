@@ -3,7 +3,7 @@
 	import InputTask from '../../atoms/InputTask/index.svelte';
 	import ModalDate from '../../atoms/ModalDate/index.svelte';
 	import SplashLoading from '../../molecules/SplashLoading/index.svelte';
-	import { getEventsPlanned, createEvent } from '../../../providers/GoogleCalendar';
+	import GoogleCalendar from '../../../providers/GoogleCalendar';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
@@ -31,7 +31,7 @@
 	};
 
 	async function createTodo() {
-		promiseAdd = createEvent(accessToken, todo.summary, todo.endAt, todo.startAt);
+		promiseAdd = GoogleCalendar.createEvent(accessToken, todo.summary, todo.endAt, todo.startAt);
 		promiseAdd.then((resolve) => {
 			resetTodo();
 			goto('/');
@@ -42,7 +42,7 @@
 		if (!accessToken) {
 			goto('/auth');
 		}
-		promise = getEventsPlanned(accessToken);
+		promise = GoogleCalendar.getEventsPlanned(accessToken);
 	});
 </script>
 
