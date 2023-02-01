@@ -10,7 +10,7 @@
 	<div>
 		<input
 			class="mx-1"
-			type="date"
+			type="datetime-local"
 			placeholder="Agrega Fecha de Vencimiento"
 			bind:value={completeAt}
 		/>
