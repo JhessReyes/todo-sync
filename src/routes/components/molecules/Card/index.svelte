@@ -1,5 +1,7 @@
 <script lang="ts">
+	import Modal from '../ModalComplete/index.svelte';
 	export let t: any = [];
+	export let accessToken: string = '';
 </script>
 
 {#if t}
@@ -16,6 +18,13 @@
 						<h2 class="card-title text-primary capitalize">{t.summary}</h2>
 					</div>
 				</div>
+				<div class="card-actions">
+					<span
+						class="bg-gray-200 rounded-full mx-1 my-1 px-3 py-1 text-sm font-semibold text-gray-400"
+					>
+						{t.status}
+					</span>
+				</div>
 				<div class="justify-end">
 					<div class="flex">
 						<strong class="my-2 mx-2">Inicio: </strong>
@@ -30,9 +39,9 @@
 						</h4>
 					</div>
 				</div>
-				{#if t.completeAt == ''}
-					<button class="btn btn-secondary">Agregar Fecha de Vencimiento</button>
-				{/if}
+				<div class="justify-end">
+					<Modal {accessToken} modalId={t.id} />
+				</div>
 			</div>
 		</label>
 	</div>
