@@ -34,10 +34,10 @@ export async function getEventsFinished(access_token: string) {
 			params: {
 				timeMin: new Date(d.getFullYear(), d.getMonth() - 1, d.getDate()).toISOString(),
 				timeMax: new Date(new Date() - 24 * 60 * 60 * 1000).toISOString(),
-				showDeleted: false,
+				showDeleted: true,
 				singleEvents: true,
 				maxResults: 100,
-				orderBy: 'startTime'
+				orderBy: 'updated'
 			},
 			headers: {
 				Authorization: 'Bearer ' + access_token

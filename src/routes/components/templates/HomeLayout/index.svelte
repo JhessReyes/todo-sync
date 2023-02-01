@@ -10,6 +10,13 @@
 	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : '';
 	let promise = Promise.resolve([]);
 	let promiseAdd = Promise.resolve([]);
+	onMount(async () => {
+		if (!accessToken) {
+			goto('/auth');
+		}
+		promise = GoogleCalendar.getEventsPlanned(accessToken);
+	});
+
 	interface Todo {
 		summary: string;
 		startAt: string;
@@ -37,13 +44,6 @@
 			goto('/');
 		});
 	}
-
-	onMount(async () => {
-		if (!accessToken) {
-			goto('/auth');
-		}
-		promise = GoogleCalendar.getEventsPlanned(accessToken);
-	});
 </script>
 
 {#if accessToken}
