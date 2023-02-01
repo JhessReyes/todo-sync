@@ -57,7 +57,6 @@ export async function createEvent(
 	start: string
 ) {
 	const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
 	let endDateTime = new Date(end).toISOString();
 	let startDateTime = new Date(start).toISOString();
 	try {

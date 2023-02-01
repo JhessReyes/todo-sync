@@ -2,7 +2,6 @@
 	import InputTask from '../../atoms/InputTask/index.svelte';
 	import ModalDate from '../../atoms/ModalDate/index.svelte';
 	import SplashLoading from '../../molecules/SplashLoading/index.svelte';
-	import Card from '../../molecules/Card/index.svelte';
 	import { getEventsPlanned, createEvent } from '../../../providers/GoogleCalendar';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -10,10 +9,11 @@
 	import Index from '../../molecules/ModalComplete/index.svelte';
 	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : '';
 	let promise = Promise.resolve([]);
+	let promiseAdd = Promise.resolve([]);
 	interface Todo {
-		endAt: string;
-		startAt: string;
 		summary: string;
+		startAt: string;
+		endAt: string;
 	}
 
 	let todo: Todo = {
@@ -30,10 +30,14 @@
 		};
 	};
 
-	const createTodo = (): void => {
-		createEvent(accessToken, todo.summary, todo.endAt, todo.startAt);
-		resetTodo();
-	};
+	async function createTodo() {
+		promiseAdd = createEvent(accessToken, todo.summary, todo.endAt, todo.startAt);
+		promiseAdd.then((resolve) => {
+			resetTodo();
+			goto('/');
+		});
+	}
+
 	onMount(async () => {
 		if (!accessToken) {
 			goto('/auth');
@@ -57,13 +61,7 @@
 		{#await promise}
 			<progress class="progress w-full h-2" />
 		{:then res}
-			<!-- 		{#each res.result.items as t}
-			<Card {t} />
-		{/each} -->
 			{#each res.result.items as t}
-			<h1>
-					{t.id}
-				</h1>
 				<div class="form-control">
 					<label class="cursor-pointer label">
 						<div class="card-body">
