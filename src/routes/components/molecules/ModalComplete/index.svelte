@@ -1,19 +1,29 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import GoogleCalendar from '../../../providers/GoogleCalendar/index';
 	export let modalId = '';
+	export let accessToken = '';
+	let promise = Promise.resolve([]);
+	async function confirm() {
+		promise = GoogleCalendar.deletEvent(accessToken, modalId);
+		promise.then((resolve) => {
+			goto('/');
+		});
+	}
 </script>
 
 <label for={modalId} class="btn bg-warning">Cancelar Evento</label>
 
-<!-- Put this part before </body> tag -->
 <input type="checkbox" id={modalId} class="modal-toggle" />
 <div class="modal">
 	<div class="modal-box">
-		<h3 class="font-bold text-lg">Congratulations random Internet user!</h3>
-		<p class="py-4">
-			You've been selected for a chance to get one year of subscription to use Wikipedia for free!
-		</p>
+		<h3 class="font-bold text-lg">¿Estas seguro de borrar este evento?</h3>
 		<div class="modal-action">
-			<label for={modalId} class="btn">Yay!</label>
+			<label for={modalId} class="btn btn-secondary">Cerrar</label>
+			<button class="btn btn-success" on:click={() => confirm()}>Confirmar</button>
 		</div>
+		{#await promise}
+			<progress class="progress w-full h-2" />
+		{/await}
 	</div>
 </div>

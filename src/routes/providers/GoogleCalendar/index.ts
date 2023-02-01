@@ -25,16 +25,18 @@ export async function getEventsPlanned(access_token: string) {
 //REQUEST TO GET EVENT FINISHED
 export async function getEventsFinished(access_token: string) {
 	let d = new Date();
-	try {
+	/* 	let da = new Date(d - 24 * 60 * 60 * 1000).toISOString();
+	console.log(da);
+ */ try {
 		const res = gapi.client.request({
 			path: 'https://www.googleapis.com/calendar/v3/calendars/primary/events',
 			method: 'GET',
 			params: {
-				timeMin: new Date(d.getFullYear(), d.getMonth(), 1).toISOString(),
-				timeMax: new Date().toISOString(),
-				showDeleted: true,
+				timeMin: new Date(d.getFullYear(), d.getMonth() - 1, d.getDate()).toISOString(),
+				timeMax: new Date(new Date() - 24 * 60 * 60 * 1000).toISOString(),
+				showDeleted: false,
 				singleEvents: true,
-				maxResults: 10,
+				maxResults: 100,
 				orderBy: 'startTime'
 			},
 			headers: {
@@ -96,4 +98,25 @@ export async function createEvent(
 	}
 }
 
-export default { getEventsPlanned, getEventsFinished, createEvent };
+//DELETE EVENT
+export async function deletEvent(access_token: string, id: string) {
+	try {
+		const res = gapi.client.request({
+			path: 'https://www.googleapis.com/calendar/v3/calendars/primary/events/' + id,
+			method: 'DELETE',
+			params: {
+				sendUpdates: 'all',
+				sendNotifications: true
+			},
+			headers: {
+				Authorization: 'Bearer ' + access_token
+			}
+		});
+		console.log(res);
+		return res;
+	} catch (error) {
+		return error;
+	}
+}
+
+export default { getEventsPlanned, getEventsFinished, createEvent, deletEvent };

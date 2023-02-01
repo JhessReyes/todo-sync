@@ -1,5 +1,6 @@
 <script lang="ts">
 	import TodoCard from '../../molecules/TodoCard/index.svelte';
+	import Card from '../../molecules/Card/index.svelte';
 	import SplashLoading from '../../molecules/SplashLoading/index.svelte';
 	import { getEventsFinished } from '../../../providers/GoogleCalendar';
 	import { onMount } from 'svelte';
@@ -12,10 +13,7 @@
 		if (!accessToken) {
 			goto('/auth');
 		}
-		setTimeout(() => {
-			promise = getEventsFinished(accessToken);
-			console.log(promise);
-		}, 500);
+		promise = getEventsFinished(accessToken);
 	});
 </script>
 
@@ -25,6 +23,9 @@
 			<progress class="progress w-full h-2" />
 		{:then res}
 			{#each res.result.items as t}
+				<Card {t} />
+			{/each}
+			<!-- {#each res.result.items as t}
 				<div class="form-control">
 					<label class="cursor-pointer label">
 						<div class="card-body">
@@ -54,7 +55,7 @@
 						</div>
 					</label>
 				</div>
-			{/each}
+			{/each} -->
 		{:catch error}
 			<p style="color: red">{error.message}</p>
 		{/await}

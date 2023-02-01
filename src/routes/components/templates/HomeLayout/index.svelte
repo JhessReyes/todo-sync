@@ -34,7 +34,6 @@
 		createEvent(accessToken, todo.summary, todo.endAt, todo.startAt);
 		resetTodo();
 	};
-
 	onMount(async () => {
 		if (!accessToken) {
 			goto('/auth');
@@ -61,7 +60,8 @@
 			<!-- 		{#each res.result.items as t}
 			<Card {t} />
 		{/each} -->
-			{#each res.result.items as t}<h1>
+			{#each res.result.items as t}
+			<h1>
 					{t.id}
 				</h1>
 				<div class="form-control">
@@ -99,7 +99,7 @@
 								</div>
 							</div>
 							<div class="justify-end">
-								<Index modalId={t.id} />
+								<Index {accessToken} modalId={t.id} />
 							</div>
 							{#if t.completeAt == ''}
 								<button class="btn btn-secondary">Agregar Fecha de Vencimiento</button>
