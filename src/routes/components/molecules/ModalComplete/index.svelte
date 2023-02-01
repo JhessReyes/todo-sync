@@ -5,7 +5,7 @@
 	export let accessToken = '';
 	let promise = Promise.resolve([]);
 	async function confirm() {
-		promise = GoogleCalendar.deletEvent(accessToken, modalId);
+		promise = GoogleCalendar.deleteEvent(accessToken, modalId);
 		promise.then((resolve) => {
 			goto('/');
 		});

@@ -98,7 +98,7 @@ export async function createEvent(
 }
 
 //DELETE EVENT
-export async function deletEvent(access_token: string, id: string) {
+export async function deleteEvent(access_token: string, id: string) {
 	try {
 		const res = gapi.client.request({
 			path: 'https://www.googleapis.com/calendar/v3/calendars/primary/events/' + id,
@@ -118,4 +118,4 @@ export async function deletEvent(access_token: string, id: string) {
 	}
 }
 
-export default { getEventsPlanned, getEventsFinished, createEvent, deletEvent };
+export default { getEventsPlanned, getEventsFinished, createEvent, deleteEvent };
