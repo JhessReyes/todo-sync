@@ -1,7 +1,14 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { handleAuthClick } from './index';
-	/* 	import { browser } from '$app/environment';
-	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : ''; */
+	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
+	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : '';
+	onMount(async () => {
+		if (accessToken) {
+			goto('/');
+		} else goto('/auth');
+	});
 </script>
 
 <div class="flex flex-col w-screen h-screen justify-center items-center">

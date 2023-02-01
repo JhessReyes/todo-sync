@@ -7,14 +7,12 @@
 	import Navbar from './components/organisms/Navbar/index.svelte';
 	import { goto } from '$app/navigation';
 	let accessToken = browser ? window.sessionStorage.getItem('accessToken') : '';
-	let ready = false;
 
 	onMount(async () => {
 		gisLoaded();
 		gapiLoaded();
 		setTimeout(() => {
 			if (gisInited && gapiInited) {
-				ready = true;
 				if (!accessToken) {
 					goto('/auth');
 				}
